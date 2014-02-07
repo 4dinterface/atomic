@@ -25,14 +25,13 @@ var main=function() {
       program:new atomic.Program(GL),
       texture:new atomic.Texture(GL)
   });
-  var geometry=new atomic.Cube(GL);
-  var geometry2=new atomic.Cube2(GL);
+  var geometry=new atomic.Cube(GL);  
   var stage=new atomic.Stage();
   
   //первый шейп
   var sh=new Shape(GL);
   sh.material=matherial;
-  sh.geometry=geometry2;
+  sh.geometry=geometry;
   sh.translateX(-2);  
   stage.addChildren(sh);
     
