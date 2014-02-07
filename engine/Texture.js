@@ -13,6 +13,8 @@ var atomic=this.atomic||{};
 
         this.texture=texture;
     }
+    var p=Texture.prototype;
+    p.isTexture=true;
     
     atomic.Texture=Texture;
 }();

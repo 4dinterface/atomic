@@ -58,6 +58,8 @@ atomic=window.atomic||{};
     //прототип
     var p=Program.prototype={};
     
+    p.isProgram=true;
+    
     
     /**
      * метод компилирует шейдеры

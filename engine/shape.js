@@ -33,9 +33,9 @@
   p.render=function(PROJMATRIX,VIEWMATRIX){            
     var GL=this.gl;
     
-    var shaders=this.material.program,
-        matherial=this.material,
-        texture=this.material.texture;
+    var shaders=this.matherial.program,
+        matherial=this.matherial,
+        texture=this.matherial.texture;
     
     //Атрибуты шейдера
     var _Pmatrix=shaders._Pmatrix,
@@ -90,5 +90,9 @@
   //КОМПОНЕНТЫ
   p.components=null;
   p.addComponent=function(component){
-      this.components.push(component);
+    this.components.push(component);
+    
+    
+    if(component.isGeometry) this.geometry=component;
+    if(component.isMatherial) this.matherial=component;        
   }

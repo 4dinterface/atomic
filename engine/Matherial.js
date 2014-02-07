@@ -5,6 +5,8 @@ var atomic=window.atomic||{};
       this.program = prop.program;
       this.texture= prop.texture;
     }    
+    var p=Matherial.prototype;
+    p.isMatherial=true;
     
     atomic.Matherial=Matherial;
 }();
