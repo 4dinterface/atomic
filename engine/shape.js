@@ -29,6 +29,8 @@
         if (this.components[i].update) this.components[i].update(this);
     }    
   }
+    
+  
   
   p.render=function(PROJMATRIX,VIEWMATRIX){            
     var GL=this.gl;
@@ -90,9 +92,10 @@
   //КОМПОНЕНТЫ
   p.components=null;
   p.addComponent=function(component){
-    this.components.push(component);
-    
+    this.components.push(component);    
     
     if(component.isGeometry) this.geometry=component;
     if(component.isMatherial) this.matherial=component;        
+    
+    return component;
   }
