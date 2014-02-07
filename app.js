@@ -11,8 +11,6 @@ var main=function() {
     alert("You are not webgl compatible :(") ;
     return false;
   } ;
-  
-  
   /*========================= MATRIX ========================= */
   
   var PROJMATRIX=LIBS.get_projection(40, CANVAS.width/CANVAS.height, 1, 100);
@@ -25,23 +23,24 @@ var main=function() {
       program:new atomic.Program(GL),
       texture:new atomic.Texture(GL)
   });
-  var geometry=new atomic.Cube(GL);  
-  var stage=new atomic.Stage();
+  var geometry=new atomic.Cube(GL);       
   
   //первый шейп
   var sh=new Shape(GL);
-  sh.material=matherial;
-  sh.geometry=geometry;
+  sh.addComponent(matherial);
+  sh.addComponent(geometry);      
   sh.translateX(-2);  
-  stage.addChildren(sh);
     
-
   //второй шейп
-  var sh=new Shape(GL);  
-  sh.material=matherial;  
-  sh.geometry=geometry;
+  var sh2=new Shape(GL);  
+  sh2.addComponent(matherial);
+  sh2.addComponent(geometry);    
+  sh2.translateX(2);  
+
+  //add to stage
+  var stage=new atomic.Stage();
   stage.addChildren(sh);
-  sh.translateX(2);  
+  stage.addChildren(sh2);  
 
   /*========================= DRAWING ========================= */
   GL.enable(GL.DEPTH_TEST);
