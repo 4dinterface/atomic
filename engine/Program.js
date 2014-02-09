@@ -26,8 +26,9 @@ atomic=window.atomic||{};
 
 +function(){
     
-    function Program(GL){ 
-      this.GL=GL;  
+    function Program(){ 
+        
+      var GL=this.GL=atomic.GL; 
       
       //установим шейдеры
       var shader_vertex=this.compileShader(shader_vertex_source, GL.VERTEX_SHADER, "VERTEX");
@@ -53,6 +54,8 @@ atomic=window.atomic||{};
 
       GL.useProgram(SHADER_PROGRAM);
       GL.uniform1i(this._sampler, 0);
+      
+      this.program=SHADER_PROGRAM;
     }
     
     //прототип

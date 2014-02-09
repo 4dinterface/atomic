@@ -1,6 +1,8 @@
 atomic=this.atomic||{};
 +function(){
-    function Cube(GL){    
+    function Cube(){    
+      var GL=atomic.GL;
+      this.gl=GL;
       /*========================= THE CUBE ========================= */
       //POINTS :
       var cube_vertex=[
@@ -68,13 +70,29 @@ atomic=this.atomic||{};
                     new Uint16Array(cube_faces),
                     GL.STATIC_DRAW);
 
-
       //вернем буферы
       this.CUBE_VERTEX=CUBE_VERTEX;
       this.CUBE_FACES=CUBE_FACES;  
+      
+      //тип данных для рендера
+      this.DATATYPE=GL.UNSIGNED_SHORT;      
+      
+      //количество точек
+      this.NPOINTS=6*2*3;              
     }
     var p=Cube.prototype;
     p.isGeometry=true;
+    p.ready=true;
     
+    //применяем геометрию
+    p.applyGeometry=function(shaders){
+        var GL=this.gl;
+        GL.vertexAttribPointer(shaders._position, 3, GL.FLOAT, false,4*(3+2),0);
+        GL.vertexAttribPointer(shaders._uv, 2, GL.FLOAT, false,4*(3+2),3*4);        
+        GL.bindBuffer(GL.ARRAY_BUFFER, this.CUBE_VERTEX);    
+        GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.CUBE_FACES);                    
+    }
+
+       
     atomic.Cube=Cube;
 }()

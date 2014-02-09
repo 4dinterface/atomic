@@ -3,17 +3,28 @@
 <html>
   <head>
     <meta charset='utf-8'/>
+	<link rel="stylesheet" type="text/css" href="style.css" media="all">
   </head>
   <body style='margin:0px' onload='main()'>
-    <canvas id='your_canvas'
-      style='position: absolute; background-color: black;'></canvas>
-       <canvas width="512" height="512" id="cool_canvas" style='display: none'></canvas>
+      
+     <div style="z-index: 2; position: absolute;">
+        <a href="/index.html" style="display:inline;">Index</a>  
+        <a href="/examples/loadmash/index.html" style="display:inline;">Dragon</a>  
+        <a href="/examples/loadmash/empty.html" style="display:inline;">stop</a>  
+     </div>
+     
+     <canvas id='your_canvas' style='position: absolute; background-color: black;' style="z-index: 2;"></canvas>
+     <canvas width="512" height="512" id="cool_canvas" style='display: none'></canvas>
 
     <script type="text/javascript" src="/engine/geometry/Cube.js"></script>
+    <script type="text/javascript" src="/engine/geometry/Json.js"></script>
+    
     <script type="text/javascript" src="/engine/libs.js"></script>
     <script type="text/javascript" src="/engine/texture.js"></script>
     <script type="text/javascript" src="/engine/Program.js"></script>
-    <script type="text/javascript" src="/engine/Matherial.js"></script>    
+    <script type="text/javascript" src="/engine/Matherial.js"></script>
+    
+    <script type="text/javascript" src="/engine/Framebuffer.js"></script>    
     <script type="text/javascript" src="/engine/shape.js"></script>
     <script type="text/javascript" src="/engine/Stage.js"></script>
     

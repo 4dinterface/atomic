@@ -1,15 +1,20 @@
  //========= Shape ===========//
-  var Shape=function(GL){
-    this.gl=GL;
-    this.components=[];
-        
-    this.MOVEMATRIX=LIBS.get_I4();                        
-    this.canvasTexture=document.getElementById("cool_canvas");
-    this.context2D=this.canvasTexture.getContext("2d");    
-  };
+  var Shape=function(){ this.init();   };
 
   var p=Shape.prototype;
-  p.geometry=null;    
+  
+  p.init=function(){
+      var GL=this.gl=atomic.GL;
+      this.components=[];
+
+      this.MOVEMATRIX=LIBS.get_I4();                        
+      this.canvasTexture=document.getElementById("cool_canvas");
+      this.context2D=this.canvasTexture.getContext("2d");    
+
+      //Эксперемент с фреймбуфером
+      //this.framebuffer=new atomic.Framebuffer(GL);
+  }
+  
   
   p.update=function(){
     //LIBS.set_I4(MOVEMATRIX);//сброс матрицы
@@ -29,28 +34,29 @@
         if (this.components[i].update) this.components[i].update(this);
     }    
   }
-    
-  
-  
+
+ 
+  /**
+   * Рендеринг Shape
+   * @param {type} PROJMATRIX
+   * @param {type} VIEWMATRIX
+   * @returns {undefined}
+   */ 
   p.render=function(PROJMATRIX,VIEWMATRIX){            
-    var GL=this.gl;
+    if(!this.geometry.ready) return;       
     
-    var shaders=this.matherial.program,
+      
+    var GL=this.gl,
+        shaders=this.matherial.program,
         matherial=this.matherial,
         texture=this.matherial.texture;
-    
-    //Атрибуты шейдера
-    var _Pmatrix=shaders._Pmatrix,
-        _Vmatrix=shaders._Vmatrix,	
-        _Mmatrix=shaders._Mmatrix,
-        _position=shaders._position,
-        _uv=shaders._uv;	    
-    
-    
+        
+    //GL.bindTexture(GL.TEXTURE_2D, texture.texture);    
+          
     //перемещение
-    GL.uniformMatrix4fv(_Pmatrix, false, PROJMATRIX);
-    GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
-    GL.uniformMatrix4fv(_Mmatrix, false, this.MOVEMATRIX);
+    GL.uniformMatrix4fv(shaders._Pmatrix, false, PROJMATRIX);
+    GL.uniformMatrix4fv(shaders._Vmatrix, false, VIEWMATRIX);
+    GL.uniformMatrix4fv(shaders._Mmatrix, false, this.MOVEMATRIX);
 
     //установка текстуры    
     GL.activeTexture(GL.TEXTURE0);
@@ -61,20 +67,22 @@
         GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, GL.RGBA, GL.UNSIGNED_BYTE, this.canvasTexture);        
         this.textureNeedUpdate=false;
     }
+    //this.setFramebuffer(null, this.canvasTexture.width, this.canvasTexture.height);              
 
-    //устанавливае геометрию
-    GL.vertexAttribPointer(_position, 3, GL.FLOAT, false,4*(3+2),0) ;
-    GL.vertexAttribPointer(_uv, 2, GL.FLOAT, false,4*(3+2),3*4) ;        
-    GL.bindBuffer(GL.ARRAY_BUFFER, this.geometry.CUBE_VERTEX);    
-    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.geometry.CUBE_FACES);
-        
-    
-    //рисуем (6*2*3)
-    GL.drawElements(GL.TRIANGLES, 6*2*3, GL.UNSIGNED_SHORT, 0);
+    //устанавливае геометрию    
+    this.geometry.applyGeometry(shaders);                       
+    GL.drawElements(GL.TRIANGLES, this.geometry.NPOINTS, this.geometry.DATATYPE, 0);
   };
-
-  p.texture=null;
-  p.MOVEMATRIX=null
+  
+  p.setFramebuffer=function(fbo, width, height) {
+        var GL=this.gl;
+        // make this the framebuffer we are rendering to.
+        GL.bindFramebuffer(GL.FRAMEBUFFER, fbo);        
+        // Tell the shader the resolution of the framebuffer.
+        //GL.uniform2f(resolutionLocation, width, height);
+        // Tell webgl the viewport setting needed for framebuffer.
+        //GL.viewport(0, 0, width, height);
+  } 
 
   p.rotateX=function(val){
     LIBS.rotateY(this.MOVEMATRIX, val);
@@ -91,6 +99,7 @@
   
   //КОМПОНЕНТЫ
   p.components=null;
+  
   p.addComponent=function(component){
     this.components.push(component);    
     
